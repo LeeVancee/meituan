@@ -36,7 +36,15 @@
             </div>
           </div>
         </div>
-        <div class="tabs"></div>
+        <van-tabs class="van-tabs">
+          <van-tab
+            v-for="(i, index) in centent_nav_list"
+            :title="i.tab"
+            :key="index"
+          >
+            <Store :store_list="i.data" />
+          </van-tab>
+        </van-tabs>
       </div>
     </div>
     <Footer />
@@ -46,6 +54,7 @@
 <script>
 import { reactive, toRefs } from 'vue'
 import Footer from '../../components/Footer.vue'
+import Store from './components/Store.vue'
 import {
   big_classify,
   small_classify,
@@ -53,7 +62,8 @@ import {
 } from '../../data/mainData.js'
 export default {
   components: {
-    Footer
+    Footer,
+    Store
   },
   setup() {
     let data = reactive({
@@ -69,6 +79,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+:deep(.van-tabs__wrap) {
+  border-radius: 10px;
+}
 .home {
   display: flex;
   flex-flow: column;
@@ -80,6 +93,9 @@ export default {
 
     .main {
       margin-top: -30px;
+      .van-tabs {
+        padding: 0 20px 10px;
+      }
       .main_bg {
         background-image: linear-gradient(#fff, #f5f5f5);
         padding: 10px 20px 0 20px;
