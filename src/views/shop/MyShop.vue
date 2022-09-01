@@ -76,6 +76,10 @@ export default {
           })
         })
       })
+      if (newList.length === 0) {
+        Toast('请选择商品')
+        return
+      }
       mainStore.ADDCART(newList)
       //console.log(newList)
       type === 'buy' ? toCart() : ''
