@@ -1,6 +1,6 @@
 <template>
-  <div class="item">
-    <img src="../../../assets/11.jpg" alt="" />
+  <div class="item" @click="toShop">
+    <img :src="item.pic" alt="" />
     <div class="item_right">
       <div class="title">{{ item.title }}</div>
       <div class="sales">{{ item.sales }}</div>
@@ -13,10 +13,17 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
   props: ['item'],
   setup() {
-    return {}
+    const router = useRouter()
+    const toShop = () => {
+      router.push('/shop')
+    }
+    return {
+      toShop
+    }
   }
 }
 </script>
