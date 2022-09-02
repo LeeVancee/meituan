@@ -24,6 +24,7 @@
         icon="cart-o"
         text="购物车"
         :badge="mainStore.cartList.length"
+        @click="toCart"
       />
       <van-action-bar-button
         type="warning"
