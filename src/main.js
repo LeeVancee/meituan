@@ -13,7 +13,10 @@ import {
   ActionBar,
   ActionBarIcon,
   ActionBarButton,
-  Toast
+  Toast,
+  Checkbox,
+  CheckboxGroup,
+  SubmitBar
 } from 'vant'
 import 'vant/lib/index.css'
 import './common/css/base.less'
@@ -31,6 +34,9 @@ app
   .use(ActionBarIcon)
   .use(ActionBarButton)
   .use(Toast)
+  .use(Checkbox)
+  .use(CheckboxGroup)
+  .use(SubmitBar)
 app.use(router)
 app.use(createPinia())
 

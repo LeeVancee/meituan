@@ -39,7 +39,7 @@ export const shopData = [
               title: '酸汤肥牛',
               num: 0,
               price: 25.0,
-              id: 3,
+              id: 2,
               add: true
             },
             {
@@ -47,7 +47,7 @@ export const shopData = [
               title: '香辣肥牛',
               num: 0,
               price: 25.0,
-              id: 4,
+              id: 3,
               add: true
             }
           ]
@@ -60,7 +60,7 @@ export const shopData = [
               title: '无骨酸菜鱼+肥牛双拼',
               num: 0,
               price: 25.0,
-              id: 5,
+              id: 4,
               add: true
             },
             {
@@ -68,7 +68,7 @@ export const shopData = [
               title: '香辣水煮鱼+肥牛双拼',
               num: 0,
               price: 25.0,
-              id: 6,
+              id: 5,
               add: true
             }
           ]
