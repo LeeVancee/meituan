@@ -5,19 +5,14 @@
         :name="item.id"
         v-if="showCheckbox"
         checked-color="#ffc400"
-      ></van-checkbox>
+      />
       <img :src="item.pic" />
       <div class="text">
         <div class="title">{{ item.title }}</div>
-        <van-icon
-          name="add-o"
-          v-if="item.add && showAdd"
-          @click="addClick(item.id)"
-        />
+
         <van-stepper
           v-model="item.num"
-          v-else
-          :min="1"
+          :min="0"
           :name="item.id"
           @change="onChange"
         />
@@ -29,7 +24,7 @@
 
 <script>
 export default {
-  props: ['item', 'showAdd', 'addClick', 'onChange', 'showCheckbox']
+  props: ['item', 'onChange', 'showCheckbox']
 }
 </script>
 

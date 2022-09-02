@@ -2,16 +2,16 @@
   <div class="shopDetails">
     <Header title="店铺" />
     <div class="content">
-      <div class="img"></div>
+      <div class="img" />
       <div class="foodClassify">
-        <div class="name" v-for="(i, index) in shopShow" :key="index">
+        <div class="name" v-for="i in shopShow">
           {{ i.title }}
-          <img :src="i.img" class="shop_img" />
+          <img :src="i.img" class="shop_img" alt="" />
         </div>
         <div class="classify">
           <van-tabs color="#ffc400">
             <van-tab v-for="(i, index) in shopData" :title="i.name">
-              <food-list :index="index" :foodData="i.data" />
+              <FoodList :index="index" :foodData="i.data" />
             </van-tab>
           </van-tabs>
         </div>
@@ -36,68 +36,55 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Header from '../../components/Header.vue'
 import FoodList from './components/FoodList.vue'
 import { shopShow, shopData } from '../../data/shopData.js'
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 import { Toast } from 'vant'
 import { useMainStore } from '../../store/index.js'
 import { useRouter } from 'vue-router'
-export default {
-  components: {
-    Header,
-    FoodList
-  },
-  setup() {
-    const mainStore = useMainStore()
-    const router = useRouter()
-    let data = reactive({
-      shopData,
-      shopShow
-    })
-    // 客服点击
-    const service = () => {
-      Toast.fail('开发中')
-    }
-    // 跳转购物车
-    const toCart = () => {
-      router.push('./cart')
-    }
 
-    // 加入购物车
-    const handleAddCart = (type) => {
-      let newList = []
-      data.shopData.forEach((item) => {
-        item.data.items?.forEach((items) => {
-          items.children.forEach((i) => {
-            if (i.num > 0) {
-              newList.push(i)
-            }
-          })
-        })
+const mainStore = useMainStore()
+const router = useRouter()
+
+let data = reactive({
+  shopData,
+  shopShow
+})
+
+// 客服的点击
+const service = () => {
+  Toast.fail('敬请期待...')
+}
+
+// 跳转购物车
+const toCart = () => {
+  router.push('./cart')
+}
+
+// 加入购物车
+const handleAddCart = (type) => {
+  let newList = []
+  mainStore.shopData.forEach((item) => {
+    item.data.items?.forEach((items) => {
+      items.children.forEach((itemss) => {
+        if (itemss.num > 0) {
+          newList.push(itemss)
+        }
       })
-      if (newList.length === 0) {
-        Toast('请选择商品')
-        return
-      }
-      mainStore.ADDCART(newList)
-      //console.log(newList)
-      type === 'buy' ? toCart() : ''
-    }
-    // 立即购买
-    const clickBuy = () => {
-      handleAddCart('buy')
-    }
-    return {
-      ...toRefs(data),
-      service,
-      handleAddCart,
-      mainStore,
-      clickBuy,
-      toCart
-    }
+    })
+  })
+  if (newList.length === 0) {
+    Toast('请选择商品')
+    return
   }
+  mainStore.ADDCART(newList)
+  type === 'buy' ? toCart() : ''
+}
+// 立即购买点击
+const clickBuy = () => {
+  handleAddCart('buy')
 }
 </script>
 

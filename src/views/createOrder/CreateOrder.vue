@@ -1,8 +1,7 @@
 <template>
   <div class="create_order">
     <Header title="生成订单" />
-    <van-contact-card type="edit" :tel="tel" :name="name" @click="onEdit" />
-
+    <van-contact-card type="edit" :name="name" :tel="tel" @click="onEdit" />
     <div class="content">
       <div v-for="i in mainStore.orderList">
         <van-card
@@ -39,6 +38,7 @@ import { useMainStore } from '../../store/index.js'
 import { useRoute, useRouter } from 'vue-router'
 import { Dialog } from 'vant'
 export default {
+  props: ['min'],
   components: {
     Header
   },
@@ -85,6 +85,15 @@ export default {
         // on close
         let newList = mainStore.cartList.filter((item) => {
           return !route.query.list.includes(item.id + '')
+        })
+        mainStore.shopData.forEach((item) => {
+          item.data.items?.forEach((items) => {
+            items.children.forEach((itemss) => {
+              if (itemss.num > 0) {
+                itemss.num = 0
+              }
+            })
+          })
         })
         mainStore.DELETE(newList)
         mainStore.UPDATEORDER()

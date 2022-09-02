@@ -4,6 +4,7 @@ export const shopShow = [
     img: 'https://img1.baidu.com/it/u=1599947592,1695977044&fm=253&fmt=auto&app=138&f=JPEG?w=640&h=440'
   }
 ]
+
 export const shopData = [
   {
     name: '点菜',

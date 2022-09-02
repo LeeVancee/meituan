@@ -10,26 +10,29 @@
 
 <script>
 import { useRouter } from 'vue-router'
-import { useMainStore } from '../store/index.js'
 import emitter from '../common/js/evenbus.js'
 import { Toast } from 'vant'
+import { useMainStore } from '../store/index.js'
+
 export default {
   props: ['title', 'edit'],
   setup() {
-    const router = useRouter()
     const mainStore = useMainStore()
+    const router = useRouter()
     const toBack = () => {
-      router.push('/')
+      router.back()
     }
+
     // 编辑按钮
     const editClick = () => {
-      if (mainStore.cartList.length) {
+      if (store.state.cartList.length) {
         mainStore.EDIT()
         emitter.emit('edit')
       } else {
-        Toast.fail('购物车空')
+        Toast.fail('购物车空空如也')
       }
     }
+
     return {
       toBack,
       editClick,

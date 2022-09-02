@@ -8,12 +8,7 @@
     >
       <template #content>
         <div v-for="(i, index) in subItem" class="item_bg">
-          <FoodAdd
-            :item="i"
-            :showAdd="true"
-            :addClick="addClick"
-            :onChange="onChange"
-          />
+          <FoodAdd :item="i" :addClick="addClick" :onChange="onChange" />
         </div>
       </template>
     </van-tree-select>
@@ -30,8 +25,6 @@ export default {
   },
   props: ['index', 'foodData'],
   setup(props) {
-    console.log(props.index)
-    console.log(props.foodData)
     let data = reactive({
       active: 0,
       items: [],

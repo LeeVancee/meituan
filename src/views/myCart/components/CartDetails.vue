@@ -17,9 +17,9 @@
       button-color="#ffc400"
       v-if="isDelete"
     >
-      <van-checkbox v-model="checked" checked-color="#ffc400" @click="choseAll"
-        >全选</van-checkbox
-      >
+      <van-checkbox v-model="checked" checked-color="#ffc400" @click="choseAll">
+        全选
+      </van-checkbox>
     </van-submit-bar>
 
     <!-- 删除 -->
@@ -37,27 +37,29 @@
     </div>
   </div>
 </template>
+
 <script>
-import { reactive, toRefs, onMounted, computed } from 'vue'
-import { useMainStore } from '../../../store/index.js'
-import FoodAdd from '../../../components/FoodAdd.vue'
-import emitter from '../../../common/js/evenbus'
-import { Toast } from 'vant'
+import { computed, onMounted, reactive, toRefs } from 'vue'
+
 import { useRouter } from 'vue-router'
+import FoodAdd from '../../../components/FoodAdd.vue'
+import { Toast } from 'vant'
+import emitter from '../../../common/js/evenbus.js'
+import { useMainStore } from '../../../store'
 
 export default {
-  props: ['changeShow'],
   components: { FoodAdd },
+  props: ['changeShow'],
   setup(props) {
     const mainStore = useMainStore()
     const router = useRouter()
-
     let data = reactive({
       result: [],
       checked: true,
       isDelete: true
     })
-    // 商品默认选中初始化
+
+    // 商品默认选中的初始化
     const init = () => {
       data.result = mainStore.cartList.map((item) => item.id)
     }
@@ -66,7 +68,7 @@ export default {
       init()
     })
 
-    // 商品个数增加同步
+    // 商品的个数同步
     const onChange = (value, detail) => {
       mainStore.cartList.map((item) => {
         if (item.id === detail.name) {
@@ -74,7 +76,8 @@ export default {
         }
       })
     }
-    // 全选 取消全选
+
+    // 全选或者取消全选
     const choseAll = () => {
       if (data.result.length !== mainStore.cartList.length) {
         init()
@@ -82,7 +85,8 @@ export default {
         data.result = []
       }
     }
-    //更新数据
+
+    // 更新数据
     const updata = (type) => {
       return mainStore.cartList.filter((item) => {
         return type === 2
@@ -90,21 +94,23 @@ export default {
           : !data.result.includes(item.id)
       })
     }
+
     // 结算按钮
     const onSubmit = () => {
-      if (data.result) {
+      if (data.result.length !== 0) {
         mainStore.PAY(updata(2))
         router.push({
-          path: './createorder',
+          path: '/createorder',
           query: {
             list: data.result
           }
         })
       } else {
-        Toast.fail('请选择商品')
+        Toast.fail('请选择要结算的商品')
       }
     }
-    // 每个复选框点击事件触发
+
+    // 每个复选框的点击事件触发
     const groupChange = (result) => {
       if (result.length === mainStore.cartList.length) {
         data.checked = true
@@ -113,6 +119,7 @@ export default {
       }
       data.result = result
     }
+
     // 总价
     const allPrice = computed(() => {
       let countList = updata(2)
@@ -122,10 +129,12 @@ export default {
       })
       return sum
     })
-    // 监听编辑点击
+
+    // 监听编辑的点击
     emitter.on('edit', () => {
       data.isDelete = !data.isDelete
     })
+
     // 删除按钮
     const deleteClick = () => {
       if (data.result.length) {
@@ -136,7 +145,7 @@ export default {
         data.result = []
 
         // 购物车无数据时展示兜底
-        if (mainStore.cartList.length === 0) {
+        if (store.state.cartList.length === 0) {
           mainStore.EDIT('delete')
           props.changeShow()
         }
@@ -148,10 +157,10 @@ export default {
       ...toRefs(data),
       mainStore,
       onChange,
+      onSubmit,
       choseAll,
       groupChange,
       allPrice,
-      onSubmit,
       deleteClick
     }
   }
@@ -168,7 +177,6 @@ export default {
   .submit-all {
     position: fixed;
     bottom: 48px;
-    border-radius: 10px;
   }
 
   .buy {
