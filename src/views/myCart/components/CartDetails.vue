@@ -43,11 +43,15 @@ import { useMainStore } from '../../../store/index.js'
 import FoodAdd from '../../../components/FoodAdd.vue'
 import emitter from '../../../common/js/evenbus'
 import { Toast } from 'vant'
+import { useRouter } from 'vue-router'
+
 export default {
   props: ['changeShow'],
   components: { FoodAdd },
   setup(props) {
     const mainStore = useMainStore()
+    const router = useRouter()
+
     let data = reactive({
       result: [],
       checked: true,
@@ -90,6 +94,12 @@ export default {
     const onSubmit = () => {
       if (data.result) {
         mainStore.PAY(updata(2))
+        router.push({
+          path: './createorder',
+          query: {
+            list: data.result
+          }
+        })
       } else {
         Toast.fail('请选择商品')
       }

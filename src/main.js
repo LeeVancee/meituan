@@ -16,7 +16,10 @@ import {
   Toast,
   Checkbox,
   CheckboxGroup,
-  SubmitBar
+  SubmitBar,
+  ContactCard,
+  Card,
+  Dialog
 } from 'vant'
 import 'vant/lib/index.css'
 import './common/css/base.less'
@@ -37,6 +40,9 @@ app
   .use(Checkbox)
   .use(CheckboxGroup)
   .use(SubmitBar)
+  .use(ContactCard)
+  .use(Card)
+  .use(Dialog)
 app.use(router)
 app.use(createPinia())
 
