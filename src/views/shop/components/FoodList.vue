@@ -16,61 +16,50 @@
   <div v-else>{{ foodData.content }}</div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs } from 'vue'
 import FoodAdd from '../../../components/FoodAdd.vue'
-export default {
-  components: {
-    FoodAdd
-  },
-  props: ['index', 'foodData'],
-  setup(props) {
-    let data = reactive({
-      active: 0,
-      items: [],
-      subItem: []
-    })
-    // 数据初始化
-    const init = () => {
-      let newList = []
-      props.foodData?.items?.map((i, index) => {
-        newList.push({ text: i.text })
-        if (data.active === index) {
-          data.subItem = i.children
-        }
-      })
-      data.items = newList
-    }
-    init()
-    // 点击左侧导航
-    const navClick = (i) => {
-      data.active = i
-      init()
-    }
-    // 切换步进器
-    const addClick = (i) => {
-      data.subItem.forEach((item) => {
-        if (item.id === i) {
-          item.add = false
-          item.num += 1
-        }
-      })
-    }
-    const onChange = (value, detail) => {
-      data.subItem.forEach((item) => {
-        if (item.id === detail.name) {
-          item.num = value
-        }
-      })
-    }
 
-    return {
-      ...toRefs(data),
-      navClick,
-      addClick,
-      onChange
+const props = defineProps(['index', 'foodData'])
+
+let data = reactive({
+  active: 0,
+  items: [],
+  subItem: []
+})
+const { active, items, subItem } = toRefs(data)
+// 数据初始化
+const init = () => {
+  let newList = []
+  props.foodData?.items?.map((i, index) => {
+    newList.push({ text: i.text })
+    if (data.active === index) {
+      data.subItem = i.children
     }
-  }
+  })
+  data.items = newList
+}
+init()
+// 点击左侧导航
+const navClick = (i) => {
+  data.active = i
+  init()
+}
+// 切换步进器
+const addClick = (i) => {
+  data.subItem.forEach((item) => {
+    if (item.id === i) {
+      item.add = false
+      item.num += 1
+    }
+  })
+}
+const onChange = (value, detail) => {
+  data.subItem.forEach((item) => {
+    if (item.id === detail.name) {
+      item.num = value
+    }
+  })
 }
 </script>
 

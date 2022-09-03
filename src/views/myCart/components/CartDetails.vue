@@ -38,131 +38,115 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, onMounted, reactive, toRefs } from 'vue'
-
 import { useRouter } from 'vue-router'
 import FoodAdd from '../../../components/FoodAdd.vue'
 import { Toast } from 'vant'
 import emitter from '../../../common/js/evenbus.js'
 import { useMainStore } from '../../../store'
 
-export default {
-  components: { FoodAdd },
-  props: ['changeShow'],
-  setup(props) {
-    const mainStore = useMainStore()
-    const router = useRouter()
-    let data = reactive({
-      result: [],
-      checked: true,
-      isDelete: true
-    })
+defineProps(['changeShow'])
+const mainStore = useMainStore()
+const router = useRouter()
+let data = reactive({
+  result: [],
+  checked: true,
+  isDelete: true
+})
+const { result, checked, isDelete } = toRefs(data)
+// 商品默认选中的初始化
+const init = () => {
+  data.result = mainStore.cartList.map((item) => item.id)
+}
 
-    // 商品默认选中的初始化
-    const init = () => {
-      data.result = mainStore.cartList.map((item) => item.id)
+onMounted(() => {
+  init()
+})
+
+// 商品的个数同步
+const onChange = (value, detail) => {
+  mainStore.cartList.map((item) => {
+    if (item.id === detail.name) {
+      item.num = value
     }
+  })
+}
 
-    onMounted(() => {
-      init()
-    })
+// 全选或者取消全选
+const choseAll = () => {
+  if (data.result.length !== mainStore.cartList.length) {
+    init()
+  } else {
+    data.result = []
+  }
+}
 
-    // 商品的个数同步
-    const onChange = (value, detail) => {
-      mainStore.cartList.map((item) => {
-        if (item.id === detail.name) {
-          item.num = value
-        }
-      })
-    }
+// 更新数据
+const updata = (type) => {
+  return mainStore.cartList.filter((item) => {
+    return type === 2
+      ? data.result.includes(item.id)
+      : !data.result.includes(item.id)
+  })
+}
 
-    // 全选或者取消全选
-    const choseAll = () => {
-      if (data.result.length !== mainStore.cartList.length) {
-        init()
-      } else {
-        data.result = []
+// 结算按钮
+const onSubmit = () => {
+  if (data.result.length !== 0) {
+    mainStore.PAY(updata(2))
+    router.push({
+      path: '/createorder',
+      query: {
+        list: data.result
       }
-    }
-
-    // 更新数据
-    const updata = (type) => {
-      return mainStore.cartList.filter((item) => {
-        return type === 2
-          ? data.result.includes(item.id)
-          : !data.result.includes(item.id)
-      })
-    }
-
-    // 结算按钮
-    const onSubmit = () => {
-      if (data.result.length !== 0) {
-        mainStore.PAY(updata(2))
-        router.push({
-          path: '/createorder',
-          query: {
-            list: data.result
-          }
-        })
-      } else {
-        Toast.fail('请选择要结算的商品')
-      }
-    }
-
-    // 每个复选框的点击事件触发
-    const groupChange = (result) => {
-      if (result.length === mainStore.cartList.length) {
-        data.checked = true
-      } else {
-        data.checked = false
-      }
-      data.result = result
-    }
-
-    // 总价
-    const allPrice = computed(() => {
-      let countList = updata(2)
-      let sum = 0
-      countList.forEach((item) => {
-        sum += item.num * item.price
-      })
-      return sum
     })
+  } else {
+    Toast.fail('请选择要结算的商品')
+  }
+}
 
-    // 监听编辑的点击
-    emitter.on('edit', () => {
-      data.isDelete = !data.isDelete
-    })
+// 每个复选框的点击事件触发
+const groupChange = (result) => {
+  if (result.length === mainStore.cartList.length) {
+    data.checked = true
+  } else {
+    data.checked = false
+  }
+  data.result = result
+}
 
-    // 删除按钮
-    const deleteClick = () => {
-      if (data.result.length) {
-        // 更新删除后的购物车的数据
-        mainStore.DELETE(updata(1))
+// 总价
+const allPrice = computed(() => {
+  let countList = updata(2)
+  let sum = 0
+  countList.forEach((item) => {
+    sum += item.num * item.price
+  })
+  return sum
+})
 
-        // 删除后的选中
-        data.result = []
+// 监听编辑的点击
+emitter.on('edit', () => {
+  data.isDelete = !data.isDelete
+})
 
-        // 购物车无数据时展示兜底
-        if (store.state.cartList.length === 0) {
-          mainStore.EDIT('delete')
-          props.changeShow()
-        }
-      } else {
-        Toast.fail('请选择要删除的商品')
-      }
+// 删除按钮
+const deleteClick = () => {
+  if (data.result.length) {
+    // 更新删除后的购物车的数据
+    mainStore.DELETE(updata(1))
+
+    // 删除后的选中
+    data.result = []
+
+    // 购物车无数据时展示兜底
+    if (store.state.cartList.length === 0) {
+      mainStore.EDIT('delete')
+      props.changeShow()
     }
-    return {
-      ...toRefs(data),
-      mainStore,
-      onChange,
-      onSubmit,
-      choseAll,
-      groupChange,
-      allPrice,
-      deleteClick
-    }
+  } else {
+    Toast.fail('请选择要删除的商品')
   }
 }
 </script>

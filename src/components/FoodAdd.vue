@@ -22,10 +22,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: ['item', 'onChange', 'showCheckbox']
-}
+<script setup>
+defineProps(['item', 'onChange', 'showCheckbox'])
 </script>
 
 <style lang="less" scoped>

@@ -30,32 +30,21 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import Footer from '../../components/Footer.vue'
 import Header from '../../components/Header.vue'
-export default {
-  components: {
-    Footer,
-    Header
-  },
-  setup() {
-    const router = useRouter()
-    let userInfo = reactive({
-      name: '大钊',
-      describe: '授人鱼鱼不如授人以渔'
-    })
 
-    //路由跳转
-    const togo = (path) => {
-      router.push(path)
-    }
-    return {
-      ...toRefs(userInfo),
-      togo
-    }
-  }
+const router = useRouter()
+let userInfo = reactive({
+  name: '大钊',
+  describe: '授人鱼鱼不如授人以渔'
+})
+const { name, describe } = toRefs(userInfo)
+//路由跳转
+const togo = (path) => {
+  router.push(path)
 }
 </script>
 

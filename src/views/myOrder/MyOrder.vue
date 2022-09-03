@@ -23,31 +23,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs } from 'vue'
 import Footer from '../../components/Footer.vue'
 import Header from '../../components/Header.vue'
 import Blank from '../../components/Blank.vue'
 import { useMainStore } from '../../store'
 
-export default {
-  components: {
-    Footer,
-    Header,
-    Blank
-  },
-  setup() {
-    const mainStore = useMainStore()
-    let data = reactive({
-      navData: ['全部', '交易完成', '待付款', '待发货', '已发货']
-    })
-
-    return {
-      ...toRefs(data),
-      mainStore
-    }
-  }
-}
+const mainStore = useMainStore()
+let data = reactive({
+  navData: ['全部', '交易完成', '待付款', '待发货', '已发货']
+})
+const { navData } = toRefs(data)
 </script>
 
 <style lang="less" scoped>

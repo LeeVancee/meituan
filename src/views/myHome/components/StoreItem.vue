@@ -12,19 +12,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRouter } from 'vue-router'
-export default {
-  props: ['item'],
-  setup() {
-    const router = useRouter()
-    const toShop = (item) => {
-      router.push({ path: './shop', query: { title: item.title } })
-    }
-    return {
-      toShop
-    }
-  }
+
+defineProps(['item'])
+const router = useRouter()
+const toShop = (item) => {
+  router.push({ path: './shop', query: { title: item.title } })
 }
 </script>
 

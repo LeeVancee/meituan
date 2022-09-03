@@ -51,36 +51,26 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs, onMounted } from 'vue'
 import Footer from '../../components/Footer.vue'
 import Store from './components/Store.vue'
 import { getHomeData } from '../../request/api.js'
 
-export default {
-  components: {
-    Footer,
-    Store
-  },
-  setup() {
-    let data = reactive({
-      homeData: {}
-    })
-    // 数据请求
-    const getHome = async () => {
-      const res = await getHomeData()
-      if (res.status === 200 && res.data.code === 0) {
-        data.homeData = res.data.data
-      }
-    }
-    onMounted(() => {
-      getHome()
-    })
-    return {
-      ...toRefs(data)
-    }
+let data = reactive({
+  homeData: {}
+})
+const { homeData } = toRefs(data)
+// 数据请求
+const getHome = async () => {
+  const res = await getHomeData()
+  if (res.status === 200 && res.data.code === 0) {
+    data.homeData = res.data.data
   }
 }
+onMounted(() => {
+  getHome()
+})
 </script>
 
 <style lang="less" scoped>

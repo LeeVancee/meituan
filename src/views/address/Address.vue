@@ -8,64 +8,53 @@
   />
 </template>
 
-<script>
+<script setup>
 import { onMounted, reactive, toRefs } from 'vue'
 import Header from '../../components/Header.vue'
-
 import { useRouter } from 'vue-router'
 import { useMainStore } from '../../store'
-export default {
-  components: { Header },
-  setup() {
-    const mainStore = useMainStore()
-    const router = useRouter()
-    let data = reactive({
-      list: []
-    })
 
-    // 初始化数据
-    const init = () => {
-      data.list = mainStore.userAddress.map((item) => {
-        return {
-          id: item.id,
-          name: item.name,
-          tel: item.tel,
-          address: `${item.province}${item.city}${item.county}${item.addressDetail}`,
-          isDefault: !!item.isDefault
-        }
-      })
-    }
-    onMounted(() => {
-      init()
-    })
-
-    // 新增地址的按钮
-    const onAdd = () => {
-      router.push({
-        path: './addressedit',
-        query: {
-          type: 'add'
-        }
-      })
-    }
-
-    // 编辑地址的按钮
-    const onEdit = (item) => {
-      router.push({
-        path: './addressedit',
-        query: {
-          id: item.id,
-          type: 'change'
-        }
-      })
-    }
-
+const mainStore = useMainStore()
+const router = useRouter()
+let data = reactive({
+  list: []
+})
+const { list } = toRefs(data)
+// 初始化数据
+const init = () => {
+  data.list = mainStore.userAddress.map((item) => {
     return {
-      ...toRefs(data),
-      onAdd,
-      onEdit
+      id: item.id,
+      name: item.name,
+      tel: item.tel,
+      address: `${item.province}${item.city}${item.county}${item.addressDetail}`,
+      isDefault: !!item.isDefault
     }
-  }
+  })
+}
+onMounted(() => {
+  init()
+})
+
+// 新增地址的按钮
+const onAdd = () => {
+  router.push({
+    path: './addressedit',
+    query: {
+      type: 'add'
+    }
+  })
+}
+
+// 编辑地址的按钮
+const onEdit = (item) => {
+  router.push({
+    path: './addressedit',
+    query: {
+      id: item.id,
+      type: 'change'
+    }
+  })
 }
 </script>
 

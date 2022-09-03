@@ -43,52 +43,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Header from '../../components/Header.vue'
 import { reactive, toRefs } from 'vue'
 import { Toast } from 'vant'
 import { useRouter } from 'vue-router'
 
-export default {
-  components: {
-    Header
-  },
-  setup() {
-    const router = useRouter()
-    let data = reactive({
-      username: '',
-      password: ''
-    })
-    //去登陆
-    const toLogin = () => {
-      router.push('./login')
+const router = useRouter()
+let data = reactive({
+  username: '',
+  password: ''
+})
+const { username, password } = toRefs(data)
+//去登陆
+const toLogin = () => {
+  router.push('./login')
+}
+// 注册
+const register = (value) => {
+  Toast('注册成功')
+  localStorage.setItem('userInfo', JSON.stringify(value))
+  router.push('./login')
+}
+// 提交按钮
+const onSubmit = (value) => {
+  if (localStorage.userInfo) {
+    let userInfo = JSON.parse(localStorage.userInfo)
+    if (userInfo['用户名'] === value['用户名']) {
+      Toast('该账号已存在')
+      return
+    } else {
+      register(value)
     }
-    // 注册
-    const register = (value) => {
-      Toast('注册成功')
-      localStorage.setItem('userInfo', JSON.stringify(value))
-      router.push('./login')
-    }
-    // 提交按钮
-    const onSubmit = (value) => {
-      if (localStorage.userInfo) {
-        let userInfo = JSON.parse(localStorage.userInfo)
-        if (userInfo['用户名'] === value['用户名']) {
-          Toast('该账号已存在')
-          return
-        } else {
-          register(value)
-        }
-      } else {
-        register(value)
-      }
-    }
-
-    return {
-      ...toRefs(data),
-      onSubmit,
-      toLogin
-    }
+  } else {
+    register(value)
   }
 }
 </script>

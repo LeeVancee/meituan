@@ -32,45 +32,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs } from 'vue'
 import Header from '../../components/Header.vue'
 import { Toast } from 'vant'
 import { useRouter } from 'vue-router'
-export default {
-  components: { Header },
-  setup() {
-    const router = useRouter()
-    let data = reactive({
-      nickName: '',
-      password: '',
-      introduceSign: '授人与鱼不如授人与鱼'
-    })
-    const logout = () => {
-      localStorage.removeItem('isLogin')
-      Toast('退出登录')
-      router.push('/login')
+
+const router = useRouter()
+let data = reactive({
+  nickName: '',
+  password: '',
+  introduceSign: '授人与鱼不如授人与鱼'
+})
+const { nickName, password, introduceSign } = toRefs(data)
+const logout = () => {
+  localStorage.removeItem('isLogin')
+  Toast('退出登录')
+  router.push('/login')
+}
+// 保存
+const save = () => {
+  if (data.nickName && data.password) {
+    const userInfo = JSON.parse(localStorage.userInfo)
+    const newUserInfo = {
+      用户名: data.nickName || userInfo['用户名'],
+      密码: data.password || userInfo['密码']
     }
-    // 保存
-    const save = () => {
-      if (data.nickName && data.password) {
-        const userInfo = JSON.parse(localStorage.userInfo)
-        const newUserInfo = {
-          用户名: data.nickName || userInfo['用户名'],
-          密码: data.password || userInfo['密码']
-        }
-        localStorage.setItem('userInfo', JSON.stringify(newUserInfo))
-        Toast('修改成功')
-        router.push('/mine')
-      } else {
-        Toast('请输入修改的内容')
-      }
-    }
-    return {
-      ...toRefs(data),
-      save,
-      logout
-    }
+    localStorage.setItem('userInfo', JSON.stringify(newUserInfo))
+    Toast('修改成功')
+    router.push('/mine')
+  } else {
+    Toast('请输入修改的内容')
   }
 }
 </script>

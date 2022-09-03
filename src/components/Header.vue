@@ -8,36 +8,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRouter } from 'vue-router'
 import emitter from '../common/js/evenbus.js'
 import { Toast } from 'vant'
 import { useMainStore } from '../store/index.js'
 
-export default {
-  props: ['title', 'edit'],
-  setup() {
-    const mainStore = useMainStore()
-    const router = useRouter()
-    const toBack = () => {
-      router.back()
-    }
+defineProps(['title', 'edit'])
 
-    // 编辑按钮
-    const editClick = () => {
-      if (store.state.cartList.length) {
-        mainStore.EDIT()
-        emitter.emit('edit')
-      } else {
-        Toast.fail('购物车空空如也')
-      }
-    }
+const mainStore = useMainStore()
+const router = useRouter()
+const toBack = () => {
+  router.back()
+}
 
-    return {
-      toBack,
-      editClick,
-      mainStore
-    }
+// 编辑按钮
+const editClick = () => {
+  if (store.state.cartList.length) {
+    mainStore.EDIT()
+    emitter.emit('edit')
+  } else {
+    Toast.fail('购物车空空如也')
   }
 }
 </script>

@@ -6,14 +6,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import StoreItem from './StoreItem.vue'
-export default {
-  props: ['store_list'],
-  components: {
-    StoreItem
-  }
-}
+
+defineProps(['store_list'])
 </script>
 
 <style lang="less" scoped>

@@ -30,101 +30,63 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs, onMounted } from 'vue'
-import { Toast } from 'vant'
 import Header from '../../components/Header.vue'
 import { useMainStore } from '../../store/index.js'
 import { useRoute, useRouter } from 'vue-router'
 import { Dialog } from 'vant'
-export default {
-  props: ['min'],
-  components: {
-    Header
-  },
-  setup() {
-    const mainStore = useMainStore()
-    const router = useRouter()
-    const route = useRoute()
-    let data = reactive({
-      tel: '',
-      name: '',
-      allPrice: 0
+
+const mainStore = useMainStore()
+const router = useRouter()
+const route = useRoute()
+let data = reactive({
+  tel: '',
+  name: '',
+  allPrice: 0
+})
+const { tel, name, allPrice } = toRefs(data)
+//用户信息初始化
+const initUser = () => {
+  mainStore.userAddress.forEach((item) => {
+    if (item.isDefault) {
+      data.name = item.name
+      data.tel = item.tel
+    }
+  })
+}
+//初始化总价价格
+const iniPrice = () => {
+  let price = 0
+  if (mainStore.orderList.length) {
+    mainStore.orderList.forEach((item) => {
+      price += item.num * item.price
     })
-    //用户信息初始化
-    const initUser = () => {
-      mainStore.userAddress.forEach((item) => {
-        if (item.isDefault) {
-          data.name = item.name
-          data.tel = item.tel
-        }
-      })
-    }
-    //初始化总价价格
-    const iniPrice = () => {
-      let price = 0
-      if (mainStore.orderList.length) {
-        mainStore.orderList.forEach((item) => {
-          price += item.num * item.price
-        })
-        data.allPrice = price
-      }
-    }
-    const toZero = () => {
-      let shuliang = 0
-      //if (mainStore.orderList.length) {
-      mainStore.orderList.forEach((item) => {
-        if (item.num != 0) {
-          item.num = shuliang
-        }
-      })
-      //}
-    }
-    onMounted(() => {
-      iniPrice()
-      initUser()
-    })
-    // 地址编辑按钮
-    const onEdit = () => {
-      router.push('/address')
-    }
-    // 生成订单按钮
-    const handleCreateOrder = () => {
-      Dialog.alert({
-        title: '提示',
-        message: '下单成功。'
-      }).then(() => {
-        // on close
-        let newList = mainStore.cartList.filter((item) => {
-          return !route.query.list.includes(item.id + '')
-        })
-
-        /* // 商品选择数量归0
-        mainStore.shopData.forEach((item) => {
-          item.data.items?.forEach((items) => {
-            items.children.forEach((itemss) => {
-              if (itemss.num > 0) {
-                itemss.num = 0
-              }
-            })
-          })
-        }) */
-        mainStore.DELETE(newList)
-        mainStore.UPDATEORDER()
-        //mainStore.toZero()
-        router.push('./order')
-
-        //toZero()
-      })
-    }
-
-    return {
-      ...toRefs(data),
-      onEdit,
-      mainStore,
-      handleCreateOrder
-    }
+    data.allPrice = price
   }
+}
+onMounted(() => {
+  iniPrice()
+  initUser()
+})
+// 地址编辑按钮
+const onEdit = () => {
+  router.push('/address')
+}
+// 生成订单按钮
+const handleCreateOrder = () => {
+  Dialog.alert({
+    title: '提示',
+    message: '下单成功。'
+  }).then(() => {
+    // on close
+    let newList = mainStore.cartList.filter((item) => {
+      return !route.query.list.includes(item.id + '')
+    })
+    mainStore.DELETE(newList)
+    mainStore.UPDATEORDER()
+    router.push('./order')
+  })
 }
 </script>
 

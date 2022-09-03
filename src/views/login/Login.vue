@@ -43,51 +43,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { Toast } from 'vant'
 import { reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../../components/Header.vue'
 
-export default {
-  components: {
-    Header
-  },
-  setup() {
-    const router = useRouter()
-    let data = reactive({
-      username: '',
-      password: ''
-    })
-    //去注册
-    const toRegister = () => {
-      router.push('/register')
-    }
-    // 提交按钮
-    const onSubmit = (value) => {
-      if (!localStorage.userInfo) {
-        Toast('账号未注册')
-        return
+const router = useRouter()
+let data = reactive({
+  username: '',
+  password: ''
+})
+const { username, password } = toRefs(data)
+//去注册
+const toRegister = () => {
+  router.push('/register')
+}
+// 提交按钮
+const onSubmit = (value) => {
+  if (!localStorage.userInfo) {
+    Toast('账号未注册')
+    return
+  } else {
+    let userInfo = JSON.parse(localStorage.userInfo)
+    if (userInfo['用户名'] === value['用户名']) {
+      if (userInfo['密码'] === value['密码']) {
+        Toast('登录成功')
+        localStorage.setItem('isLogin', '1')
+        router.push('./home')
       } else {
-        let userInfo = JSON.parse(localStorage.userInfo)
-        if (userInfo['用户名'] === value['用户名']) {
-          if (userInfo['密码'] === value['密码']) {
-            Toast('登录成功')
-            localStorage.setItem('isLogin', '1')
-            router.push('./home')
-          } else {
-            Toast('密码错误')
-          }
-        } else {
-          Toast('账号不存在或输入错误')
-        }
+        Toast('密码错误')
       }
-    }
-
-    return {
-      ...toRefs(data),
-      onSubmit,
-      toRegister
+    } else {
+      Toast('账号不存在或输入错误')
     }
   }
 }
