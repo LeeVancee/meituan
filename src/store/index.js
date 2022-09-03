@@ -8,8 +8,8 @@ export const useMainStore = defineStore('main', {
       orderList: [], //生成订单数据
       orderListed: [], //生成订单后数据
       edit: true, //编辑状态
-      userAddress: address,
-      shopData: shopData
+      userAddress: address
+      //shopData: shopData
     }
   },
   actions: {

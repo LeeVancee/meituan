@@ -19,7 +19,7 @@
           </div>
           <div class="classify">
             <div class="big_classify">
-              <div v-for="(i, index) in big_classify" :key="index">
+              <div v-for="(i, index) in homeData.big_classify" :key="index">
                 <svg class="icon" aria-hidden="true">
                   <use :xlink:href="`#${i.icon}`"></use>
                 </svg>
@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="small_classify">
-              <div v-for="(i, index) in small_classify" :key="index">
+              <div v-for="(i, index) in homeData.small_classify" :key="index">
                 <svg class="icon" aria-hidden="true">
                   <use :xlink:href="`#${i.icon}`"></use>
                 </svg>
@@ -38,7 +38,7 @@
         </div>
         <van-tabs class="van-tabs">
           <van-tab
-            v-for="(i, index) in centent_nav_list"
+            v-for="(i, index) in homeData.centent_nav_list"
             :title="i.tab"
             :key="index"
           >
@@ -52,14 +52,11 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, onMounted } from 'vue'
 import Footer from '../../components/Footer.vue'
 import Store from './components/Store.vue'
-import {
-  big_classify,
-  small_classify,
-  centent_nav_list
-} from '../../data/mainData.js'
+import { getHomeData } from '../../request/api.js'
+
 export default {
   components: {
     Footer,
@@ -67,9 +64,17 @@ export default {
   },
   setup() {
     let data = reactive({
-      big_classify,
-      small_classify,
-      centent_nav_list
+      homeData: {}
+    })
+    // 数据请求
+    const getHome = async () => {
+      const res = await getHomeData()
+      if (res.status === 200 && res.data.code === 0) {
+        data.homeData = res.data.data
+      }
+    }
+    onMounted(() => {
+      getHome()
     })
     return {
       ...toRefs(data)
