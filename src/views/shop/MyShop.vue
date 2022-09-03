@@ -62,7 +62,6 @@ const getShop = async () => {
   if (res.status === 200 && res.data.code === 0) {
     res.data.data.map((i) => {
       if (i.title === route.query.title) {
-        console.log(i.title)
         data.title = i.title
         data.img = i.img
         data.shopData = i.shopData
