@@ -70,12 +70,24 @@ export default {
         data.allPrice = price
       }
     }
+    const toZero = () => {
+      let shuliang = 0
+      //if (mainStore.orderList.length) {
+      mainStore.orderList.forEach((item) => {
+        if (item.num != 0) {
+          item.num = shuliang
+        }
+      })
+      //}
+    }
     onMounted(() => {
       iniPrice()
       initUser()
     })
     // 地址编辑按钮
-    const onEdit = () => Toast('edit')
+    const onEdit = () => {
+      router.push('/address')
+    }
     // 生成订单按钮
     const handleCreateOrder = () => {
       Dialog.alert({
@@ -86,6 +98,8 @@ export default {
         let newList = mainStore.cartList.filter((item) => {
           return !route.query.list.includes(item.id + '')
         })
+
+        /* // 商品选择数量归0
         mainStore.shopData.forEach((item) => {
           item.data.items?.forEach((items) => {
             items.children.forEach((itemss) => {
@@ -94,10 +108,13 @@ export default {
               }
             })
           })
-        })
+        }) */
         mainStore.DELETE(newList)
         mainStore.UPDATEORDER()
+        //mainStore.toZero()
         router.push('./order')
+
+        //toZero()
       })
     }
 

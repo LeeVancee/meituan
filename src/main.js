@@ -19,7 +19,12 @@ import {
   SubmitBar,
   ContactCard,
   Card,
-  Dialog
+  Dialog,
+  AddressList,
+  AddressEdit,
+  Form,
+  Field,
+  CellGroup
 } from 'vant'
 import 'vant/lib/index.css'
 import './common/css/base.less'
@@ -43,6 +48,11 @@ app
   .use(ContactCard)
   .use(Card)
   .use(Dialog)
+  .use(AddressList)
+  .use(AddressEdit)
+  .use(Form)
+  .use(Field)
+  .use(CellGroup)
 app.use(router)
 app.use(createPinia())
 
